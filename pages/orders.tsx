@@ -60,7 +60,7 @@ const OrderPage: FC = () => {
         >
           {isFetching ? (
             <ListItemSkeleton />
-          ) : isError ? (
+          ) : error ? (
             <Box py="1rem">Error: {error.Message}</Box>
           ) : (
             <Box width="100%">
