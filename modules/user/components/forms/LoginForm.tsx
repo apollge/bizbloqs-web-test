@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Checkbox,
   FormControl,
@@ -59,19 +60,19 @@ const LoginForm: FC = () => {
           <FormControl id="username">
             <FormLabel>Username</FormLabel>
             <Input {...register("username")} />
-            <ErrorMessage errors={errors} name="username" />
+            <Box color="red.300">
+              <ErrorMessage errors={errors} name="username" />
+            </Box>
           </FormControl>
           <FormControl id="password">
             <FormLabel id="password">Password</FormLabel>
             <Input type="password" {...register("password")} />
-            <ErrorMessage errors={errors} name="password" />
+            <Box color="red.300">
+              <ErrorMessage errors={errors} name="password" />
+            </Box>
           </FormControl>
           <Button
-            _hover={{
-              bg: "blue.500",
-            }}
-            bg={"blue.400"}
-            color={"white"}
+            colorScheme="blue"
             disabled={loginMutation.isLoading}
             isLoading={loginMutation.isLoading}
             type="submit"

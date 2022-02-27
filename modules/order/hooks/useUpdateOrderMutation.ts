@@ -1,6 +1,7 @@
 import { useToast } from "@chakra-ui/react";
 import { AxiosError, AxiosResponse } from "axios";
 import { useMutation } from "react-query";
+import { useLocalStorage } from "../../common/hooks/useLocalStorage";
 import axiosInstance from "../../common/utils/axiosInstance";
 import queryClient from "../../common/utils/queryClient";
 import { ResponseError } from "../../common/validation/types";
@@ -8,13 +9,10 @@ import { OrderSchema } from "../../order/validations/orderSchema";
 import { ItemProps } from "../../order/validations/types";
 
 const useUpdateOrderMutation = () => {
-  const access_token =
-    typeof window !== "undefined" ? localStorage.getItem("access_token") : "";
-
-  const user_token =
-    typeof window !== "undefined" ? localStorage.getItem("user_token") : "";
-
   const toast = useToast();
+
+  const [access_token] = useLocalStorage("access_token");
+  const [user_token] = useLocalStorage("user_token");
 
   return useMutation<
     AxiosResponse<ItemProps>,

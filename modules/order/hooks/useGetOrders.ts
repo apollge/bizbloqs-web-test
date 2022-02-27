@@ -1,20 +1,17 @@
 import { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
+import { useLocalStorage } from "../../common/hooks/useLocalStorage";
 import axiosInstance from "../../common/utils/axiosInstance";
 import { ResponseError } from "../../common/validation/types";
 import { LIMIT } from "../constants/limit";
-import { OrderSchema } from "../validations/orderSchema";
 import { OrderProps } from "../validations/types";
 
 const useGetOrders = () => {
-  const access_token =
-    typeof window !== "undefined" ? localStorage.getItem("access_token") : "";
-
-  const user_token =
-    typeof window !== "undefined" ? localStorage.getItem("user_token") : "";
-
   const [page, setPage] = useState(0);
+
+  const [access_token] = useLocalStorage("access_token");
+  const [user_token] = useLocalStorage("user_token");
 
   const result = useQuery<AxiosResponse<OrderProps>, ResponseError>(
     ["orders", "list"],

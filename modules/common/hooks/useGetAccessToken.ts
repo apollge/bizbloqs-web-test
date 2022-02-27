@@ -3,7 +3,7 @@ import axiosInstance from "../utils/axiosInstance";
 import qs from "querystring";
 import { AccessTokenSchema } from "../validation/accessTokenSchema";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { ResponseError } from "../validation/types";
+import { ResponseError, TokenError } from "../validation/types";
 import { useToast } from "@chakra-ui/react";
 
 interface AccessTokenProps {
@@ -19,7 +19,7 @@ const useGetAccessToken = () => {
 
   return useMutation<
     AxiosResponse<AccessTokenProps>,
-    AxiosError<ResponseError>,
+    AxiosError<TokenError>,
     AccessTokenSchema
   >(
     "getAccessToken",
@@ -33,7 +33,11 @@ const useGetAccessToken = () => {
     },
     {
       onError: (error) => {
-        toast({ description: error.response?.data.Message });
+        toast({
+          description:
+            error.response?.data.error_description ??
+            error.response?.data.error,
+        });
       },
     }
   );

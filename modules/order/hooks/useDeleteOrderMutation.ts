@@ -1,19 +1,17 @@
 import { useToast } from "@chakra-ui/react";
 import { AxiosError, AxiosResponse } from "axios";
 import { useMutation } from "react-query";
+import { useLocalStorage } from "../../common/hooks/useLocalStorage";
 import axiosInstance from "../../common/utils/axiosInstance";
 import queryClient from "../../common/utils/queryClient";
 import { ResponseError } from "../../common/validation/types";
 import { OrderProps } from "../../order/validations/types";
 
 const useDeleteOrderMutation = () => {
-  const access_token =
-    typeof window !== "undefined" ? localStorage.getItem("access_token") : "";
-
-  const user_token =
-    typeof window !== "undefined" ? localStorage.getItem("user_token") : "";
-
   const toast = useToast();
+
+  const [access_token] = useLocalStorage("access_token");
+  const [user_token] = useLocalStorage("user_token");
 
   return useMutation<
     AxiosResponse<OrderProps>,
@@ -32,8 +30,8 @@ const useDeleteOrderMutation = () => {
       onError: (error) => {
         toast({ description: error.response?.data.Message });
       },
-      onSuccess: (response) => {
-        toast({ description: "Deleted", status: "info" });
+      onSuccess: () => {
+        toast({ description: "Order Deleted", status: "info" });
 
         // invalidate queries
         queryClient.invalidateQueries(["orders", "list"]);

@@ -6,8 +6,9 @@ import {
   Stack,
   Text,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useGetAccessToken from "../modules/common/hooks/useGetAccessToken";
 import { useLocalStorage } from "../modules/common/hooks/useLocalStorage";
 import LoginForm from "../modules/user/components/forms/LoginForm";
@@ -15,6 +16,8 @@ import LoginForm from "../modules/user/components/forms/LoginForm";
 const LoginPage = () => {
   const getAccessToken = useGetAccessToken();
   const [accessToken, setAccessToken] = useLocalStorage("access_token");
+
+  const [hasTokenError, setHasTokenError] = useState(false);
 
   const getAccessTokenData = async () => {
     try {
@@ -27,7 +30,11 @@ const LoginPage = () => {
       if (response.data.access_token) {
         setAccessToken(response.data.access_token);
       }
-    } catch (e) {}
+
+      setHasTokenError(false);
+    } catch (e) {
+      setHasTokenError(true);
+    }
   };
 
   // re-render if accessToken changes
@@ -45,19 +52,25 @@ const LoginPage = () => {
       minH={"100vh"}
     >
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
-        <Stack align={"center"}>
-          <Heading fontSize={"4xl"}>Login</Heading>
-        </Stack>
-        <Box
-          bg={useColorModeValue("white", "gray.700")}
-          boxShadow={"lg"}
-          boxSize="md"
-          height="100%"
-          p={8}
-          rounded={"lg"}
-        >
-          <LoginForm />
-        </Box>
+        {hasTokenError && !getAccessToken.isLoading ? (
+          <Text>Error getting access token</Text>
+        ) : (
+          <>
+            <Stack align={"center"}>
+              <Heading fontSize={"4xl"}>Login</Heading>
+            </Stack>
+            <Box
+              bg={useColorModeValue("white", "gray.700")}
+              boxShadow={"lg"}
+              boxSize="md"
+              height="100%"
+              p={8}
+              rounded={"lg"}
+            >
+              <LoginForm />
+            </Box>
+          </>
+        )}
       </Stack>
     </Flex>
   );
